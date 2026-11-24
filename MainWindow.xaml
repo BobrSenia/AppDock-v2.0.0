@@ -1,0 +1,274 @@
+<Window x:Class="dionishuesos.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="AppDock"
+        Width="600" Height="400"
+        MinWidth="420" MinHeight="300"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="CanResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="Manual"
+        Deactivated="Window_Deactivated"
+        PreviewMouseLeftButtonDown="Window_MouseLeftButtonDown"
+        AllowDrop="True"
+        DragOver="Window_DragOver"
+        Drop="Window_Drop">
+
+    <Window.Resources>
+        <Style x:Key="HeaderButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="34"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Background" Value="#30202020"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="11">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Opacity" Value="0.78"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Opacity" Value="0.58"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PanelButtonStyle" TargetType="Button">
+            <Setter Property="MinHeight" Value="34"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Margin" Value="0,3,0,3"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#343434"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" CornerRadius="10" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Opacity" Value="0.82"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Bd" Property="Opacity" Value="0.65"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModernSliderStyle" TargetType="Slider">
+            <Setter Property="Height" Value="26"/>
+            <Setter Property="IsMoveToPointEnabled" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid VerticalAlignment="Center">
+                            <Border x:Name="OpacityTrack" Height="5" CornerRadius="3" Background="{DynamicResource OpacityTrackBrush}" VerticalAlignment="Center" IsHitTestVisible="False"/>
+                            <Track x:Name="PART_Track"
+                                   Minimum="{TemplateBinding Minimum}"
+                                   Maximum="{TemplateBinding Maximum}"
+                                   Value="{TemplateBinding Value}"
+                                   Orientation="Horizontal"
+                                   IsDirectionReversed="{TemplateBinding IsDirectionReversed}">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton IsHitTestVisible="False" Focusable="False" Template="{x:Null}"/>
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Width="16" Height="16" Background="#F4F4F4" BorderBrush="#777777" BorderThickness="1">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton IsHitTestVisible="False" Focusable="False" Template="{x:Null}"/>
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <SolidColorBrush x:Key="ScrollbarThumbBrush" Color="#A0FFFFFF"/>
+        <SolidColorBrush x:Key="OpacityTrackBrush" Color="#707070"/>
+
+        <Style TargetType="{x:Type ScrollBar}">
+            <Setter Property="Width" Value="6"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid Background="Transparent" Width="6">
+                            <Track x:Name="PART_Track" IsDirectionReversed="True">
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Border Background="{DynamicResource ScrollbarThumbBrush}" CornerRadius="4" Margin="1,0"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False"/>
+                                </Track.IncreaseRepeatButton>
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False"/>
+                                </Track.DecreaseRepeatButton>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="AppButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Opacity" Value="1"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TransformGroup>
+                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                        <TranslateTransform X="0" Y="0"/>
+                    </TransformGroup>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" To="1.06" Duration="0:0:0.12"/>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" To="1.06" Duration="0:0:0.12"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" To="1" Duration="0:0:0.12"/>
+                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" To="1" Duration="0:0:0.12"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border x:Name="MainBorder" Margin="8" CornerRadius="24" Background="#E6202020" ClipToBounds="True">
+        <Border.ContextMenu>
+            <ContextMenu>
+                <MenuItem Header="Закрыть" Click="CloseApp_Click"/>
+            </ContextMenu>
+        </Border.ContextMenu>
+        <Grid x:Name="RootGrid">
+            <Border x:Name="TopBar" Height="48" VerticalAlignment="Top" Background="#F02A2A2A" CornerRadius="24,24,0,0" Panel.ZIndex="10">
+                <Grid Margin="12,0">
+                    <Button x:Name="SettingsButton" Style="{StaticResource HeaderButtonStyle}" HorizontalAlignment="Left" VerticalAlignment="Center" Click="OpenSettings_Click" ToolTip="Настройки">
+                        <Image x:Name="SettingsButtonImage" Width="19" Height="19" Stretch="Uniform"/>
+                    </Button>
+                    <TextBlock x:Name="FolderTitle" Text="Мои приложения" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" FontWeight="SemiBold" Foreground="White" TextTrimming="CharacterEllipsis" MaxWidth="380"/>
+                    <Button x:Name="CloseButton" Style="{StaticResource HeaderButtonStyle}" HorizontalAlignment="Right" VerticalAlignment="Center" Click="CloseApp_Click" ToolTip="Закрыть">
+                        <Image x:Name="CloseButtonImage" Width="18" Height="18" Stretch="Uniform"/>
+                    </Button>
+                </Grid>
+            </Border>
+
+            <ScrollViewer x:Name="AppsScrollViewer"
+                          Margin="18,58,18,12"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Stretch"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled"
+                          CanContentScroll="False"
+                          PanningMode="VerticalOnly">
+                <Grid x:Name="AppsPanel" Width="500" HorizontalAlignment="Center" VerticalAlignment="Top">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="110"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="100"/>
+                    </Grid.ColumnDefinitions>
+                    <Border x:Name="DropHighlight" Width="92" Height="102" HorizontalAlignment="Center" VerticalAlignment="Center"
+                            Background="#25FFFFFF" BorderBrush="#70FFFFFF" BorderThickness="1.5" CornerRadius="18"
+                            Opacity="0" Visibility="Collapsed" IsHitTestVisible="False"/>
+                </Grid>
+            </ScrollViewer>
+
+            <Border x:Name="SettingsPanel" Width="310" MaxHeight="340" HorizontalAlignment="Right" VerticalAlignment="Top"
+                    Margin="0,54,12,0" Padding="14" Background="#F02A2A2A" CornerRadius="16"
+                    Visibility="Collapsed" Panel.ZIndex="30">
+                <Grid>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="310">
+                        <StackPanel>
+                            <TextBlock Text="Настройки" Foreground="White" FontSize="19" FontWeight="Bold" Margin="0,0,35,12"/>
+                            <TextBlock Text="Название папки" Foreground="#DDDDDD" Margin="0,0,0,4"/>
+                            <TextBox x:Name="FolderNameBox" Text="Мои приложения" TextChanged="FolderNameBox_TextChanged" Height="32" Margin="0,0,0,12" Padding="7,4"
+                                     Background="#303030" Foreground="White" BorderBrush="#666666"/>
+
+                            <TextBlock Text="Прозрачность фона" Foreground="#DDDDDD" Margin="0,0,0,2"/>
+                            <Slider x:Name="OpacitySlider" Style="{StaticResource ModernSliderStyle}" Minimum="0" Maximum="1" Value="0.87"
+                                    ValueChanged="OpacitySlider_ValueChanged" Margin="0,0,0,10"/>
+
+                            <TextBlock Text="Цвет фона" Foreground="#DDDDDD" Margin="0,0,0,5"/>
+                            <WrapPanel>
+                                <Button Content="Тёмная" Style="{StaticResource PanelButtonStyle}" Click="DarkColor_Click" Margin="0,0,6,6"/>
+                                <Button Content="Светлая" Style="{StaticResource PanelButtonStyle}" Click="LightColor_Click" Margin="0,0,6,6"/>
+                                <Button Content="Свой цвет…" Style="{StaticResource PanelButtonStyle}" Click="CustomColor_Click" Margin="0,0,0,6"/>
+                            </WrapPanel>
+
+                            <TextBlock Text="Фоновое изображение" Foreground="#DDDDDD" Margin="0,7,0,4"/>
+                            <TextBlock Text="Рекомендуется 1800 × 1200 px (3:2), PNG или JPG." Foreground="#AAAAAA" FontSize="10" TextWrapping="Wrap" Margin="0,0,0,6"/>
+                            <Border Background="#202020" CornerRadius="10" Padding="6" Margin="0,0,0,6">
+                                <Image x:Name="BackgroundPreview" Height="66" Stretch="Uniform"/>
+                            </Border>
+                            <WrapPanel>
+                                <Button Content="Выбрать фото" Style="{StaticResource PanelButtonStyle}" Click="ChangeBackgroundImage_Click" Margin="0,0,6,0"/>
+                                <Button Content="Убрать фото" Style="{StaticResource PanelButtonStyle}" Click="RemoveBackgroundImage_Click"/>
+                            </WrapPanel>
+
+                            <Separator Margin="0,10,0,8" Background="#555555"/>
+                            <TextBlock Text="Иконка настроек" Foreground="#DDDDDD" Margin="0,0,0,4"/>
+                            <Border Background="#202020" CornerRadius="9" Padding="6" Margin="0,0,0,5">
+                                <Image x:Name="GearPreview" Height="36" Stretch="Uniform"/>
+                            </Border>
+                            <Button Content="Выбрать изображение" Style="{StaticResource PanelButtonStyle}" Click="ChangeGearImage_Click"/>
+
+                            <TextBlock Text="Иконка закрытия" Foreground="#DDDDDD" Margin="0,8,0,4"/>
+                            <Border Background="#202020" CornerRadius="9" Padding="6" Margin="0,0,0,5">
+                                <Image x:Name="ClosePreview" Height="36" Stretch="Uniform"/>
+                            </Border>
+                            <Button Content="Выбрать изображение" Style="{StaticResource PanelButtonStyle}" Click="ChangeCloseImage_Click"/>
+                            <Button Content="Сохранить" Style="{StaticResource PanelButtonStyle}" Click="SaveSettings_Click" Margin="0,12,0,0"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                    <Button x:Name="SettingsCollapseButton" Content="⌄" Width="28" Height="28" HorizontalAlignment="Right" VerticalAlignment="Top"
+                            Style="{StaticResource HeaderButtonStyle}" Click="SettingsCollapse_Click" ToolTip="Свернуть настройки"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
